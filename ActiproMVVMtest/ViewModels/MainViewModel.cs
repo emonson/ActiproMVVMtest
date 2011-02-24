@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using ActiproSoftware.Windows;
+using ActiproMVVMtest.Common;
 using ActiproMVVMtest.Common.ViewModels;
 
 namespace ActiproMVVMtest.ViewModels {
@@ -11,6 +13,8 @@ namespace ActiproMVVMtest.ViewModels {
 	public class MainViewModel : ViewModelBase {
 
 		private DeferrableObservableCollection<ToolItemViewModel> toolItems;
+        private DeferrableObservableCollection<DocumentItemViewModel> documentItems = new DeferrableObservableCollection<DocumentItemViewModel>();
+        private DelegateCommand<object> newDocumentCommand;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -41,7 +45,9 @@ namespace ActiproMVVMtest.ViewModels {
 			viewModel.DefaultDock = Dock.Left;
 			viewModel.IsInitiallyAutoHidden = true;
 			this.toolItems.Add(viewModel);
-		}
+
+            this.AddNewDocument();
+        }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES
@@ -57,5 +63,52 @@ namespace ActiproMVVMtest.ViewModels {
 			}
 		}
 
-	}
+        /// <summary>
+        /// Gets the document items associated with this view-model.
+        /// </summary>
+        /// <value>The document items associated with this view-model.</value>
+        public IList<DocumentItemViewModel> DocumentItems
+        {
+            get
+            {
+                return this.documentItems;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to close this view-model.
+        /// </summary>
+        public void AddNewDocument()
+        {
+            this.documentItems.Add(new TextDocumentItemViewModel());
+        }
+
+        /// <summary>
+        /// Gets the add new document command.
+        /// </summary>
+        /// <value>The add new document command.</value>
+        public ICommand NewDocumentCommand
+        {
+            get
+            {
+                if (this.newDocumentCommand == null)
+                    this.newDocumentCommand = new DelegateCommand<object>(this.OnNewDocumentCommandExecuted);
+                return this.newDocumentCommand;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // NON-PUBLIC PROCEDURES
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        /// <summary>
+        /// Occurs when the <see cref="NewDocumentCommand"/> is executed.
+        /// </summary>
+        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
+        private void OnNewDocumentCommandExecuted(object parameter)
+        {
+            this.AddNewDocument();
+        }
+
+    }
 }

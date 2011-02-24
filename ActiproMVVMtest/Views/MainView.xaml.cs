@@ -1,3 +1,4 @@
+using System.Windows;
 
 namespace ActiproMVVMtest.Views {
 
@@ -17,5 +18,16 @@ namespace ActiproMVVMtest.Views {
 			InitializeComponent();
 		}
 
-	}
+        /// <summary>
+        /// Occurs when the <c>File.Exit</c> menu item is clicked.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">A <see cref="RoutedEventArgs"/> that contains the event data.</param>
+        private void OnFileExitMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            // Show a message
+            MessageBox.Show("Close the application here.");
+        }
+
+    }
 }

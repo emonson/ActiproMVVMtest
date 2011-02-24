@@ -14,23 +14,40 @@
 			<Setter Property="Title" Value="{Binding Title}" />
 		</Style>
 
-		<!-- docking:ToolWindow -->
+        <!-- docking:ToolWindow -->
 		<Style x:Key="ToolItemStyle" TargetType="docking:ToolWindow" BasedOn="{StaticResource DockingItemStyle}" />
 
-	</UserControl.Resources>
+        <!-- docking:DocumentWindow -->
+        <Style x:Key="DocumentItemStyle" TargetType="docking:DocumentWindow" BasedOn="{StaticResource DockingItemStyle}">
+            <Setter Property="FileName" Value="{Binding FileName}" />
+            <Setter Property="IsReadOnly" Value="{Binding IsReadOnly}" />
+        </Style>
 
-	<!-- DockSite -->
-	<docking:DockSite ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
-			common:DockSiteViewModelBehavior.IsManaged="true">
-		<docking:Workspace>
-			<docking:TabbedMdiHost>
-				<docking:TabbedMdiContainer>
-					<docking:DocumentWindow Title="WelcomeDocument.rtf" Description="Rich-text document">
-						<RichTextBox BorderThickness="0" />
-					</docking:DocumentWindow>
-				</docking:TabbedMdiContainer>
-			</docking:TabbedMdiHost>
-		</docking:Workspace>
-	</docking:DockSite>
+    </UserControl.Resources>
 
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" >
+            <MenuItem Header="_File">
+                <MenuItem Header="New Document" Command="{Binding NewDocumentCommand}" />
+                <Separator />
+                <MenuItem Header="Exit" Click="OnFileExitMenuItemClick" />
+            </MenuItem>
+        </Menu>
+
+        <!-- DockSite -->
+	    <docking:DockSite ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
+                          DocumentItemsSource="{Binding DocumentItems}" DocumentItemContainerStyle="{StaticResource DocumentItemStyle}"
+			    common:DockSiteViewModelBehavior.IsManaged="true">
+		    <docking:Workspace>
+			    <docking:TabbedMdiHost>
+				    <docking:TabbedMdiContainer>
+					    <docking:DocumentWindow Title="WelcomeDocument.rtf" Description="Rich-text document">
+						    <RichTextBox BorderThickness="0" />
+					    </docking:DocumentWindow>
+				    </docking:TabbedMdiContainer>
+			    </docking:TabbedMdiHost>
+		    </docking:Workspace>
+	    </docking:DockSite>
+        
+    </DockPanel>
 </UserControl>
