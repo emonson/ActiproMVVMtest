@@ -1,0 +1,36 @@
+<UserControl x:Name="userControl" x:Class="ActiproMVVMtest.Views.MainView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:docking="http://schemas.actiprosoftware.com/winfx/xaml/docking"
+	xmlns:test="clr-namespace:ActiproMVVMtest"
+	xmlns:common="clr-namespace:ActiproMVVMtest.Common"
+	>
+	<UserControl.Resources>
+
+		<!-- docking:DockingWindow -->
+		<Style x:Key="DockingItemStyle" TargetType="docking:DockingWindow">
+			<Setter Property="Description" Value="{Binding Description}" />
+			<Setter Property="ImageSource" Value="{Binding ImageSource}" />
+			<Setter Property="Title" Value="{Binding Title}" />
+		</Style>
+
+		<!-- docking:ToolWindow -->
+		<Style x:Key="ToolItemStyle" TargetType="docking:ToolWindow" BasedOn="{StaticResource DockingItemStyle}" />
+
+	</UserControl.Resources>
+
+	<!-- DockSite -->
+	<docking:DockSite ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
+			common:DockSiteViewModelBehavior.IsManaged="true">
+		<docking:Workspace>
+			<docking:TabbedMdiHost>
+				<docking:TabbedMdiContainer>
+					<docking:DocumentWindow Title="WelcomeDocument.rtf" Description="Rich-text document">
+						<RichTextBox BorderThickness="0" />
+					</docking:DocumentWindow>
+				</docking:TabbedMdiContainer>
+			</docking:TabbedMdiHost>
+		</docking:Workspace>
+	</docking:DockSite>
+
+</UserControl>

@@ -1,0 +1,31 @@
+﻿<Application x:Class="ActiproMVVMtest.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:ActiproMVVMtest.ViewModels"
+		     xmlns:views="clr-namespace:ActiproMVVMtest.Views"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+
+        <!-- Main View Model -->
+        <DataTemplate DataType="{x:Type viewModels:MainViewModel}">
+            <views:MainView />
+        </DataTemplate>
+
+        <!-- Documents -->
+        <DataTemplate DataType="{x:Type viewModels:TextDocumentItemViewModel}">
+            <views:TextDocumentItemView />
+        </DataTemplate>
+
+        <!-- Tools -->
+        <DataTemplate DataType="{x:Type viewModels:Tool1ViewModel}">
+            <views:Tool1View />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:Tool2ViewModel}">
+            <views:Tool2View />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:Tool3ViewModel}">
+            <views:Tool3View />
+        </DataTemplate>
+        
+    </Application.Resources>
+</Application>

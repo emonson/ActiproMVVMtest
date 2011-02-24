@@ -1,0 +1,5 @@
+# Ingnore these
+*.suo
+ActiproMVVMtest/obj/
+ActiproMVVMtext/bin/
+
