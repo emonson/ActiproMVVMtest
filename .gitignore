@@ -1,5 +1,6 @@
 # Ingnore these
 *.suo
+*.user
 ActiproMVVMtest/obj/
 ActiproMVVMtest/bin/
 
