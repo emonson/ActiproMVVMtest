@@ -1,4 +1,5 @@
 using System.Windows;
+using ActiproMVVMtest.Common;
 
 namespace ActiproMVVMtest.Views {
 

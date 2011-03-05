@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using ActiproSoftware.Windows;
 using ActiproMVVMtest.Common;
+using ActiproMVVMtest.Models;
 using ActiproMVVMtest.Common.ViewModels;
 
 namespace ActiproMVVMtest.ViewModels {
@@ -16,6 +17,9 @@ namespace ActiproMVVMtest.ViewModels {
         private DeferrableObservableCollection<DocumentItemViewModel> documentItems = new DeferrableObservableCollection<DocumentItemViewModel>();
         private DelegateCommand<object> newDocumentCommand;
 
+        private SimulationModel simModel;
+        private VTKDataModel vtkModel;
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,25 +32,28 @@ namespace ActiproMVVMtest.ViewModels {
 			// Build tool items
 			this.toolItems = new DeferrableObservableCollection<ToolItemViewModel>();
 
-			// Tool 1
-			ToolItemViewModel viewModel = new Tool1ViewModel();
-			viewModel.DefaultDock = Dock.Right;
-			viewModel.DockGroup = "Group1";
-			this.toolItems.Add(viewModel);
-
 			// Tool 2
-			viewModel = new Tool2ViewModel();
-			viewModel.DefaultDock = Dock.Right;
-			viewModel.DockGroup = "Group1";
+            ToolItemViewModel viewModel = new Tool2ViewModel();
+			viewModel.DefaultDock = Dock.Bottom;
+			viewModel.DockGroup = "BottomGroup";
 			this.toolItems.Add(viewModel);
 
-			// Tool 3
+            // Sim Config
+            viewModel = new SimConfigViewModel();
+            viewModel.DefaultDock = Dock.Left;
+            viewModel.DockGroup = "LeftGroup";
+            this.toolItems.Add(viewModel);
+
+            // Tool 3
 			viewModel = new Tool3ViewModel();
 			viewModel.DefaultDock = Dock.Left;
+            viewModel.DockGroup = "HiddenGroup";
 			viewModel.IsInitiallyAutoHidden = true;
 			this.toolItems.Add(viewModel);
 
-            this.AddNewDocument();
+            this.simModel = new SimulationModel();
+
+            this.AddNewDocument("VTKDocument");
         }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,11 +83,28 @@ namespace ActiproMVVMtest.ViewModels {
         }
 
         /// <summary>
-        /// Attempts to close this view-model.
+        /// Adds new TextDocument to documentItems
         /// </summary>
-        public void AddNewDocument()
+        public void AddNewDocument(object parameter)
         {
-            this.documentItems.Add(new TextDocumentItemViewModel());
+            string doc_type = (string)parameter;
+            if (doc_type != null)
+            {
+                if (doc_type == "TextDocument")
+                {
+                    this.documentItems.Add(new TextDocumentItemViewModel());
+                }
+                else if (doc_type == "VTKDocument")
+                {
+                    // Not creating VTKDataModel unless a window is open,
+                    // but I don't know how to get rid of it on last close...
+                    if (this.vtkModel == null)
+                    {
+                        this.vtkModel = new VTKDataModel(this.simModel);
+                    }
+                    this.documentItems.Add(new VTKDocumentItemViewModel(this.vtkModel));
+                }
+            }
         }
 
         /// <summary>
@@ -107,7 +131,7 @@ namespace ActiproMVVMtest.ViewModels {
         /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
         private void OnNewDocumentCommandExecuted(object parameter)
         {
-            this.AddNewDocument();
+            this.AddNewDocument(parameter);
         }
 
     }

@@ -1,0 +1,12 @@
+<UserControl x:Class="ActiproMVVMtest.Views.VTKDocumentItemView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:shared="http://schemas.actiprosoftware.com/winfx/xaml/shared"
+    xmlns:wf="clr-namesspace:System.Windows.Forms;assembly=System.Windows.Forms"
+    >
+    
+    <Grid>
+        <ContentPresenter Content="{Binding Wfh}" />
+    </Grid>
+
+</UserControl>

@@ -15,10 +15,13 @@
         <DataTemplate DataType="{x:Type viewModels:TextDocumentItemViewModel}">
             <views:TextDocumentItemView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:VTKDocumentItemViewModel}">
+            <views:VTKDocumentItemView />
+        </DataTemplate>
 
         <!-- Tools -->
-        <DataTemplate DataType="{x:Type viewModels:Tool1ViewModel}">
-            <views:Tool1View />
+        <DataTemplate DataType="{x:Type viewModels:SimConfigViewModel}">
+            <views:SimConfigView />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:Tool2ViewModel}">
             <views:Tool2View />

@@ -6,7 +6,7 @@ namespace ActiproMVVMtest.Views
 	/// <summary>
 	/// Provides a user control for a tool view-model.
 	/// </summary>
-	public partial class Tool1View : UserControl {
+	public partial class SimConfigView : UserControl {
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -15,7 +15,8 @@ namespace ActiproMVVMtest.Views
 		/// <summary>
 		/// Initializes an instance of the <c>Tool1View</c> class.
 		/// </summary>
-		public Tool1View() {
+        public SimConfigView()
+        {
 			InitializeComponent();
 		}
 
