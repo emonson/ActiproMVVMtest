@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ActiproMVVMtest.Models
 {
-    class SimulationModel
+    public class SimulationModel
     {
         private List<MotileCell> cells = new List<MotileCell>();
 
@@ -47,7 +47,7 @@ namespace ActiproMVVMtest.Models
     }
 
 
-    class MotileCell
+    public class MotileCell
     {
         private double[] position;
         private static int idCounter = 0;

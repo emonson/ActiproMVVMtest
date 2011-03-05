@@ -6,7 +6,7 @@ using Kitware.VTK;
 
 namespace ActiproMVVMtest.Models
 {
-    class VTKDataModel
+    public class VTKDataModel
     {
         private SimulationModel simModel;
 
@@ -50,6 +50,16 @@ namespace ActiproMVVMtest.Models
             poly.GetPointData().AddArray(cellTypes);
         }
 
+        public vtkPolyData Output
+        {
+            get { return poly; }
+        }
+
+        public long NumPoints
+        {
+            get { return poly.GetPoints().GetNumberOfPoints(); }
+        }
+        
         public vtkAlgorithmOutput OutputPort
         {
             get { return poly.GetProducerPort(); }

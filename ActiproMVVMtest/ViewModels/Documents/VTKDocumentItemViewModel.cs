@@ -26,12 +26,12 @@ namespace ActiproMVVMtest.ViewModels
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextDocumentItemViewModel"/> class.
 		/// </summary>
-		public VTKDocumentItemViewModel(VTKDataModel vm) {
+		public VTKDocumentItemViewModel(VTKDataModel dataModel) {
 
 			this.Title = string.Format("VTK Doc {0}", counter++);
 			this.Text = string.Format("Dynamically created at {0}", DateTime.Now);
 			this.Description = "VTK document";
-            this.vtkData = vm;
+            this.vtkData = dataModel;
 
             // create a VTK output control and make the forms host point to it
             rwc = new RenderWindowControl();
@@ -56,7 +56,7 @@ namespace ActiproMVVMtest.ViewModels
 
             vtkGlyph3D glyp = vtkGlyph3D.New();
             glyp.SetSourceConnection(sph.GetOutputPort(0));
-            glyp.SetInputConnection(ids.GetOutputPort(0));
+            glyp.SetInputConnection(this.vtkData.OutputPort);
             glyp.ScalingOff();
             glyp.OrientOff();
 
@@ -73,8 +73,8 @@ namespace ActiproMVVMtest.ViewModels
             mapper.ScalarVisibilityOn();
             mapper.SetScalarModeToUsePointFieldData();
             // uncomment the next line to avoid the out of memory problem
-            mapper.SelectColorArray("Ids");
-            mapper.SetScalarRange(0, nPoints - 1);
+            mapper.SelectColorArray(this.vtkData.CellIdsArrayName);
+            mapper.SetScalarRange(0, this.vtkData.NumPoints - 1);
 
             vtkActor actor = vtkActor.New();
             actor.SetMapper(mapper);
