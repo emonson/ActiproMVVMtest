@@ -31,6 +31,8 @@
                 <MenuItem Header="New Document" Command="{Binding NewDocumentCommand}" CommandParameter="TextDocument"/>
                 <MenuItem Header="New VTK Doc" Command="{Binding NewDocumentCommand}" CommandParameter="VTKDocument"/>
                 <Separator />
+                <MenuItem Header="Start Sim" Command="{Binding StartSimCommand}" />
+                <Separator />
                 <MenuItem Header="Exit" Click="OnFileExitMenuItemClick" />
             </MenuItem>
         </Menu>

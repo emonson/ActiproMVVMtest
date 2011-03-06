@@ -16,6 +16,7 @@ namespace ActiproMVVMtest.ViewModels {
 		private DeferrableObservableCollection<ToolItemViewModel> toolItems;
         private DeferrableObservableCollection<DocumentItemViewModel> documentItems = new DeferrableObservableCollection<DocumentItemViewModel>();
         private DelegateCommand<object> newDocumentCommand;
+        private DelegateCommand<object> startSimCommand;
 
         private SimulationModel simModel;
         private VTKDataModel vtkModel;
@@ -107,6 +108,27 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
+        public void StartSim(object parameter)
+        {
+            for (int ii = 0; ii < 2000; ++ii)
+            {
+                this.simModel.MoveAllCells(0.001);
+                this.vtkModel.Update();
+                if (ii % 100 == 0)
+                {
+                    foreach (DocumentItemViewModel vm in this.documentItems)
+                    {
+                        VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
+                        if (tmp != null)
+                        {
+                            tmp.Update();
+                        }
+                    }
+                    // System.Threading.Thread.Sleep(1000);
+                }
+            }
+        }
+
         /// <summary>
         /// Gets the add new document command.
         /// </summary>
@@ -121,6 +143,20 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
+        /// <summary>
+        /// Gets the start sim command.
+        /// </summary>
+        /// <value>The add new document command.</value>
+        public ICommand StartSimCommand
+        {
+            get
+            {
+                if (this.startSimCommand == null)
+                    this.startSimCommand = new DelegateCommand<object>(this.OnStartSimCommandExecuted);
+                return this.startSimCommand;
+            }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         // NON-PUBLIC PROCEDURES
         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -132,6 +168,15 @@ namespace ActiproMVVMtest.ViewModels {
         private void OnNewDocumentCommandExecuted(object parameter)
         {
             this.AddNewDocument(parameter);
+        }
+
+        /// <summary>
+        /// Occurs when the <see cref="StartSimCommand"/> is executed.
+        /// </summary>
+        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
+        private void OnStartSimCommandExecuted(object parameter)
+        {
+            this.StartSim(parameter);
         }
 
     }

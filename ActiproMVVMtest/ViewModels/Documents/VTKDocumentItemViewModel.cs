@@ -39,7 +39,7 @@ namespace ActiproMVVMtest.ViewModels
             wfh.Child = rwc;
             rwc.CreateGraphics();
             rwc.RenderWindow.SetCurrentCursor(9);
-            rwc.RenderWindow.GetInteractor().LeftButtonPressEvt += new vtkObject.vtkObjectEventHandler(leftMouseDown);
+            // rwc.RenderWindow.GetInteractor().LeftButtonPressEvt += new vtkObject.vtkObjectEventHandler(leftMouseDown);
 
             // set up basic viewing
             vtkRenderer ren = rwc.RenderWindow.GetRenderers().GetFirstRenderer();
@@ -87,6 +87,12 @@ namespace ActiproMVVMtest.ViewModels
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public void Update()
+        {
+            rwc.Update();
+            rwc.Invalidate();
+        }
 
         /// <summary>
         /// handler for left mouse button down

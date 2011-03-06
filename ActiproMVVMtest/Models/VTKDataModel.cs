@@ -38,16 +38,37 @@ namespace ActiproMVVMtest.Models
             foreach (MotileCell cell in sm.Cells)
             {
                 int i = cell.CellId;
+                int c = cell.CellType;
                 double[] p = cell.Position;
                 points.SetPoint(i, p[0], p[1], p[2]);
                 cellIDs.SetValue(i, i);
-                cellTypes.SetValue(i, i % 3);
+                cellTypes.SetValue(i, c);
             }
 
             poly = vtkPolyData.New();
             poly.SetPoints(points);
             poly.GetPointData().AddArray(cellIDs);
             poly.GetPointData().AddArray(cellTypes);
+        }
+
+        public void Update()
+        {
+            int numCells = simModel.Cells.Count;
+
+            cellIDs.SetNumberOfValues(numCells);
+            cellTypes.SetNumberOfValues(numCells);
+            points.SetNumberOfPoints(numCells);
+
+            foreach (MotileCell cell in simModel.Cells)
+            {
+                int i = cell.CellId;
+                int c = cell.CellType;
+                double[] p = cell.Position;
+                points.SetPoint(i, p[0], p[1], p[2]);
+                cellIDs.SetValue(i, i);
+                cellTypes.SetValue(i, c);
+            }
+            poly.Modified();
         }
 
         public vtkPolyData Output
