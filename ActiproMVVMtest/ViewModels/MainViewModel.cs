@@ -52,7 +52,7 @@ namespace ActiproMVVMtest.ViewModels {
 			viewModel.IsInitiallyAutoHidden = true;
 			this.toolItems.Add(viewModel);
 
-            this.simModel = new SimulationModel();
+            this.simModel = new SimulationModel(1000);
 
             this.AddNewDocument("VTKDocument");
         }
@@ -116,6 +116,8 @@ namespace ActiproMVVMtest.ViewModels {
                 this.vtkModel.Update();
                 if (ii % 100 == 0)
                 {
+                    // I think this should be possible through command bindings
+                    // and delegate subscriptions...
                     foreach (DocumentItemViewModel vm in this.documentItems)
                     {
                         VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
@@ -124,7 +126,6 @@ namespace ActiproMVVMtest.ViewModels {
                             tmp.Update();
                         }
                     }
-                    // System.Threading.Thread.Sleep(1000);
                 }
             }
         }

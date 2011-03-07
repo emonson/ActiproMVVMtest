@@ -12,6 +12,7 @@ namespace ActiproMVVMtest.Models
 
         private vtkPolyData poly;
         private vtkPoints points;
+        private vtkCellArray verts;
         private vtkIntArray cellIDs, cellTypes;
         private string cellIdsArrayName = "cellID";
         private string cellTypeArrayName = "cellType";
@@ -35,6 +36,10 @@ namespace ActiproMVVMtest.Models
             points = vtkPoints.New();
             points.SetNumberOfPoints(numCells);
 
+            verts = vtkCellArray.New();
+            verts.Allocate(verts.EstimateSize(1, numCells), 1000);
+            verts.InsertNextCell(numCells);
+
             foreach (MotileCell cell in sm.Cells)
             {
                 int i = cell.CellId;
@@ -43,10 +48,12 @@ namespace ActiproMVVMtest.Models
                 points.SetPoint(i, p[0], p[1], p[2]);
                 cellIDs.SetValue(i, i);
                 cellTypes.SetValue(i, c);
+                verts.InsertCellPoint(i);
             }
 
             poly = vtkPolyData.New();
             poly.SetPoints(points);
+            poly.SetVerts(verts);
             poly.GetPointData().AddArray(cellIDs);
             poly.GetPointData().AddArray(cellTypes);
         }
@@ -58,6 +65,8 @@ namespace ActiproMVVMtest.Models
             cellIDs.SetNumberOfValues(numCells);
             cellTypes.SetNumberOfValues(numCells);
             points.SetNumberOfPoints(numCells);
+            verts.Allocate(verts.EstimateSize(1, numCells), 1000);
+            verts.InsertNextCell(numCells);
 
             foreach (MotileCell cell in simModel.Cells)
             {
@@ -67,6 +76,7 @@ namespace ActiproMVVMtest.Models
                 points.SetPoint(i, p[0], p[1], p[2]);
                 cellIDs.SetValue(i, i);
                 cellTypes.SetValue(i, c);
+                verts.InsertCellPoint(i);
             }
             poly.Modified();
         }

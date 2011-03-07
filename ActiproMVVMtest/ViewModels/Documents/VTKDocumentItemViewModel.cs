@@ -52,7 +52,7 @@ namespace ActiproMVVMtest.ViewModels
             vtkSphereSource sph = vtkSphereSource.New();
             sph.SetThetaResolution(16);
             sph.SetPhiResolution(16);
-            sph.SetRadius(0.05);
+            sph.SetRadius(0.02);
 
             vtkGlyph3D glyp = vtkGlyph3D.New();
             glyp.SetSourceConnection(sph.GetOutputPort(0));
