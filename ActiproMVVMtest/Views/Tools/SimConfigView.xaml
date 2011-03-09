@@ -2,6 +2,33 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-	<TextBlock Text="Tool 1 content here." />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
+            <TextBlock Text="Duration" Margin="5,0" VerticalAlignment="Center"/>
+            <TextBox Width="40" Text="{Binding Duration}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
+            <TextBlock Text="Vis Interval" Margin="5,0" VerticalAlignment="Center"/>
+            <TextBox Width="40" Text="{Binding VisInterval}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5">
+            <TextBlock Text="Num Cells" Margin="5,0" VerticalAlignment="Center"/>
+            <TextBox Width="40" Text="{Binding NumCells}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="5">
+            <TextBlock Text="Move Amount" Margin="5,0" VerticalAlignment="Center"/>
+            <TextBox Width="40" Text="{Binding Dx}" />
+        </StackPanel>
+    </Grid>
 
 </UserControl>

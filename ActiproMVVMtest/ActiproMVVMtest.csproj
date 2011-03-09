@@ -75,6 +75,7 @@
     <Compile Include="Common\ViewModels\DocumentItemViewModel.cs" />
     <Compile Include="Common\ViewModels\ToolItemViewModel.cs" />
     <Compile Include="Common\ViewModels\ViewModelBase.cs" />
+    <Compile Include="Models\SimConfigModel.cs" />
     <Compile Include="Models\SimulationModel.cs" />
     <Compile Include="Models\VTKDataModel.cs" />
     <Compile Include="ViewModels\Documents\VTKDocumentItemViewModel.cs" />

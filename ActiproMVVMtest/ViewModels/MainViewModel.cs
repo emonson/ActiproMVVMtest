@@ -20,6 +20,7 @@ namespace ActiproMVVMtest.ViewModels {
 
         private SimulationModel simModel;
         private VTKDataModel vtkModel;
+        private SimConfigViewModel simConfigViewModel;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -29,6 +30,8 @@ namespace ActiproMVVMtest.ViewModels {
 		/// Initializes a new instance of the <see cref="MainViewModel"/> class.
 		/// </summary>
 		public MainViewModel() {
+
+            SimConfigModel simConfigModel = new SimConfigModel();
 
 			// Build tool items
 			this.toolItems = new DeferrableObservableCollection<ToolItemViewModel>();
@@ -40,10 +43,10 @@ namespace ActiproMVVMtest.ViewModels {
 			this.toolItems.Add(viewModel);
 
             // Sim Config
-            viewModel = new SimConfigViewModel();
-            viewModel.DefaultDock = Dock.Left;
-            viewModel.DockGroup = "LeftGroup";
-            this.toolItems.Add(viewModel);
+            simConfigViewModel = new SimConfigViewModel(simConfigModel);
+            simConfigViewModel.DefaultDock = Dock.Left;
+            simConfigViewModel.DockGroup = "LeftGroup";
+            this.toolItems.Add(simConfigViewModel);
 
             // Tool 3
 			viewModel = new Tool3ViewModel();
@@ -52,9 +55,9 @@ namespace ActiproMVVMtest.ViewModels {
 			viewModel.IsInitiallyAutoHidden = true;
 			this.toolItems.Add(viewModel);
 
-            this.simModel = new SimulationModel(1000);
+            this.simModel = new SimulationModel(simConfigViewModel);
 
-            this.AddNewDocument("VTKDocument");
+            // this.AddNewDocument("VTKDocument");
         }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,11 +113,11 @@ namespace ActiproMVVMtest.ViewModels {
 
         public void StartSim(object parameter)
         {
-            for (int ii = 0; ii < 2000; ++ii)
+            for (int ii = 0; ii < this.simConfigViewModel.Duration; ++ii)
             {
-                this.simModel.MoveAllCells(0.001);
+                this.simModel.MoveAllCells();
                 this.vtkModel.Update();
-                if (ii % 100 == 0)
+                if (ii % this.simConfigViewModel.VisInterval == 0)
                 {
                     // I think this should be possible through command bindings
                     // and delegate subscriptions...

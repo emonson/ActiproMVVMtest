@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using ActiproMVVMtest.ViewModels;
 
 namespace ActiproMVVMtest.Models
 {
     public class SimulationModel
     {
         private List<MotileCell> cells = new List<MotileCell>();
+        private SimConfigViewModel simConfigModel;
 
-        public SimulationModel()
+        public SimulationModel(SimConfigViewModel svm)
         {
-            this.CreateCells(100);
+            this.simConfigModel = svm;
+            this.CreateCells();
+            this.simConfigModel.PropertyChanged += this.OnSimConfigViewModelPropertyChanged;
         }
 
-        public SimulationModel(int numCells)
-        {
-            this.CreateCells(numCells);
-        }
-
-        public void MoveAllCells(double dx)
+        public void MoveAllCells()
         {
             foreach (MotileCell cell in cells)
             {
-                cell.Move(dx);
+                cell.Move(simConfigModel.Dx);
             }
         }
 
@@ -35,14 +35,26 @@ namespace ActiproMVVMtest.Models
             get { return cells; }
         }
 
-        private void CreateCells(int numCells)
+        private void CreateCells()
         {
             MotileCell currentCell;
-            for (int ii = 0; ii < numCells; ++ii)
+            for (int ii = 0; ii < simConfigModel.NumCells; ++ii)
             {
                 currentCell = new MotileCell();
                 cells.Add(currentCell);
             }
+        }
+
+        private void ResetSim()
+        {
+            cells.Clear();
+            CreateCells();
+        }
+
+        void OnSimConfigViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "NumCells")
+                this.ResetSim();
         }
     }
 
