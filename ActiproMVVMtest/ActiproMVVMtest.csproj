@@ -40,12 +40,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ActiproSoftware.Docking.Wpf351, Version=11.1.540.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
+    <Reference Include="ActiproSoftware.Editors.Wpf351, Version=11.1.540.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
     <Reference Include="ActiproSoftware.Shared.Wpf351, Version=11.1.540.0, Culture=neutral, PublicKeyToken=36ff2196ab5654b9, processorArchitecture=MSIL" />
-    <Reference Include="Kitware.mummy.Runtime">
-      <HintPath>..\..\..\..\..\Program Files\ActiViz.NET 5.6.1 OpenSource Edition\bin\Kitware.mummy.Runtime.dll</HintPath>
+    <Reference Include="Kitware.mummy.Runtime, Version=1.0.1.0, Culture=neutral, PublicKeyToken=995c7fb9db2c1b44, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PlazaSur\dev\dev-main\PlazaSur\PlazaSur\dependencies\vtk\Kitware.mummy.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Kitware.VTK">
-      <HintPath>..\..\..\..\..\Program Files\ActiViz.NET 5.6.1 OpenSource Edition\bin\Kitware.VTK.dll</HintPath>
+    <Reference Include="Kitware.VTK, Version=5.6.1.599, Culture=neutral, PublicKeyToken=995c7fb9db2c1b44, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\PlazaSur\dev\dev-main\PlazaSur\PlazaSur\dependencies\vtk\Kitware.VTK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

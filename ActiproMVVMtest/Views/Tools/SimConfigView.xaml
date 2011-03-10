@@ -1,8 +1,14 @@
 <UserControl x:Name="userControl" x:Class="ActiproMVVMtest.Views.SimConfigView"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:editors="http://schemas.actiprosoftware.com/winfx/xaml/editors"
+>
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -10,25 +16,54 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="5">
-            <TextBlock Text="Duration" Margin="5,0" VerticalAlignment="Center"/>
-            <TextBox Width="40" Text="{Binding Duration}" />
-        </StackPanel>
+        <TextBlock Text="Duration" Margin="5,0" VerticalAlignment="Center" Grid.Row="0" Grid.Column="0" />
+        <editors:Int32EditBox x:Name="durationEditBox" 
+                              Grid.Row="0" Grid.Column="1" 
+                              SpinnerVisibility="Visible"
+						      Width="80" 
+                              HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Right"
+                              StepValue="1000"
+                              Value="{Binding Duration}" 
+                              />
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
-            <TextBlock Text="Vis Interval" Margin="5,0" VerticalAlignment="Center"/>
-            <TextBox Width="40" Text="{Binding VisInterval}" />
-        </StackPanel>
+        <TextBlock Text="Vis Interval" Margin="5,0" VerticalAlignment="Center" Grid.Row="1" Grid.Column="0" />
+        <editors:Int32EditBox x:Name="visIntervalEditBox" 
+                              Grid.Row="1" Grid.Column="1" 
+                              SpinnerVisibility="Visible"
+						      Width="80" 
+                              HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Right"
+                              StepValue="100"
+                              Minimum="1"
+                              Maximum="{Binding ElementName=durationEditBox, Path=Value}"
+                              Value="{Binding VisInterval}" 
+                              />
 
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5">
-            <TextBlock Text="Num Cells" Margin="5,0" VerticalAlignment="Center"/>
-            <TextBox Width="40" Text="{Binding NumCells}" />
-        </StackPanel>
+        <TextBlock Text="Num Cells" Margin="5,0" VerticalAlignment="Center" Grid.Row="2" Grid.Column="0" />
+        <editors:Int32EditBox x:Name="numCellsEditBox" 
+                              Grid.Row="2" Grid.Column="1" 
+                              SpinnerVisibility="Visible"
+						      Width="80" 
+                              HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Right"
+                              StepValue="100"
+                              Minimum="1"
+                              Value="{Binding NumCells}" 
+                              />
 
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="5">
-            <TextBlock Text="Move Amount" Margin="5,0" VerticalAlignment="Center"/>
-            <TextBox Width="40" Text="{Binding Dx}" />
-        </StackPanel>
+        <TextBlock Text="Move Amount" Margin="5,0" VerticalAlignment="Center" Grid.Row="3" Grid.Column="0" />
+        <editors:DoubleEditBox x:Name="dxEditBox" 
+                              Grid.Row="3" Grid.Column="1" 
+                              SpinnerVisibility="Visible"
+						      Width="80" 
+                              HorizontalAlignment="Left"
+                              HorizontalContentAlignment="Right"
+                              StepValue="0.001"
+                              Minimum="0.001"
+                              Format="F3"
+                              Value="{Binding Dx}" 
+                              />
     </Grid>
 
 </UserControl>
