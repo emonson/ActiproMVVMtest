@@ -100,6 +100,12 @@ namespace ActiproMVVMtest.ViewModels
             mapper.SetScalarRange(0, this.vtkData.NumPoints - 1);
         }
 
+        public void ResetCamera()
+        {
+            rwc.RenderWindow.GetRenderers().GetFirstRenderer().ResetCamera();
+            rwc.Invalidate();
+        }
+
         /// <summary>
         /// handler for left mouse button down
         /// </summary>

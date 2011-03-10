@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:docking="http://schemas.actiprosoftware.com/winfx/xaml/docking"
 	xmlns:test="clr-namespace:ActiproMVVMtest"
+	xmlns:vm="clr-namespace:ActiproMVVMtest.ViewModels"
 	xmlns:common="clr-namespace:ActiproMVVMtest.Common"
 	>
 	<UserControl.Resources>
@@ -28,20 +29,36 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top" >
             <MenuItem Header="_File">
+                <MenuItem Header="Exit" Click="OnFileExitMenuItemClick" />
+            </MenuItem>
+            <MenuItem Header="_Activate">
                 <MenuItem Header="New Document" Command="{Binding NewDocumentCommand}" CommandParameter="TextDocument"/>
                 <MenuItem Header="New VTK Doc" Command="{Binding NewDocumentCommand}" CommandParameter="VTKDocument"/>
-                <Separator />
-                <MenuItem Header="Reset Sim" Command="{Binding ResetSimCommand}" />
-                <MenuItem Header="Start Sim" Command="{Binding StartSimCommand}" />
-                <Separator />
-                <MenuItem Header="Exit" Click="OnFileExitMenuItemClick" />
             </MenuItem>
         </Menu>
 
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar Name="Main_Toolbar" RenderOptions.BitmapScalingMode="NearestNeighbor">
+                <Button Name="ResetSimButton"
+                        ToolBar.OverflowMode="Never"
+                        Content="Reset Sim"
+                        Command="{Binding ResetSimCommand}"
+                        Padding="6,2"
+                        />
+                <Button Name="StartSimButton"
+                        ToolBar.OverflowMode="Never"
+                        Content="Start Sim"
+                        Command="{Binding StartSimCommand}"
+                        Padding="6,2"
+                        />
+            </ToolBar>
+        </ToolBarTray>
+        
         <!-- DockSite -->
-	    <docking:DockSite ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
+	    <docking:DockSite x:Name="MainDockSite"
+                          ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
                           DocumentItemsSource="{Binding DocumentItems}" DocumentItemContainerStyle="{StaticResource DocumentItemStyle}"
-			    common:DockSiteViewModelBehavior.IsManaged="true">
+			              common:DockSiteViewModelBehavior.IsManaged="true">
 		    <docking:Workspace>
 			    <docking:TabbedMdiHost>
 				    <docking:TabbedMdiContainer>

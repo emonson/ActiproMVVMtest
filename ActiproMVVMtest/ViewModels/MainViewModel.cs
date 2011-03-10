@@ -174,8 +174,44 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
+        
         /////////////////////////////////////////////////////////////////////////////////////////////////////
-        // COMMANDS
+        // ROUTED COMMANDS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public static RoutedCommand ResetCameraCmd = new RoutedCommand();
+
+        // ExecutedRoutedEventHandler for the custom command.
+        private void ResetCameraCmdExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (this.vtkModel != null)
+            {
+                foreach (DocumentItemViewModel vm in this.documentItems)
+                {
+                    VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
+                    if (tmp != null)
+                    {
+                        tmp.ResetCamera();
+                    }
+                }
+            }
+        }
+
+        // CanExecuteRoutedEventHandler for the custom color command.
+        private void ResetCameraCmdCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (e.Source is Panel)
+            {
+                e.CanExecute = true;
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // ICOMMANDS
         /////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
