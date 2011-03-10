@@ -10,13 +10,14 @@ namespace ActiproMVVMtest.Models
     public class SimulationModel
     {
         private List<MotileCell> cells = new List<MotileCell>();
-        private SimConfigViewModel simConfigModel;
+        private SimConfigModel simConfigModel;
+        private int time;
 
-        public SimulationModel(SimConfigViewModel svm)
+        public SimulationModel(SimConfigModel sm)
         {
-            this.simConfigModel = svm;
+            this.simConfigModel = sm;
             this.CreateCells();
-            this.simConfigModel.PropertyChanged += this.OnSimConfigViewModelPropertyChanged;
+            this.time = 0;
         }
 
         public void MoveAllCells()
@@ -25,6 +26,7 @@ namespace ActiproMVVMtest.Models
             {
                 cell.Move(simConfigModel.Dx);
             }
+            time += 1;
         }
 
         /// <summary>
@@ -33,6 +35,11 @@ namespace ActiproMVVMtest.Models
         public List<MotileCell> Cells
         {
             get { return cells; }
+        }
+
+        public int Time
+        {
+            get { return time; }
         }
 
         private void CreateCells()
@@ -45,16 +52,12 @@ namespace ActiproMVVMtest.Models
             }
         }
 
-        private void ResetSim()
+        public void ResetCells()
         {
             cells.Clear();
+            MotileCell.ResetIds();
+            time = 0;
             CreateCells();
-        }
-
-        void OnSimConfigViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "NumCells")
-                this.ResetSim();
         }
     }
 
@@ -84,7 +87,7 @@ namespace ActiproMVVMtest.Models
         {
             position[0] += dx * 2.0 * (rand.NextDouble() - 0.5);
             position[1] += dx * 2.0 * (rand.NextDouble() - 0.5);
-            position[0] += dx * 2.0 * (rand.NextDouble() - 0.5);
+            position[2] += dx * 2.0 * (rand.NextDouble() - 0.5);
         }
 
         public double[] Position
@@ -100,6 +103,11 @@ namespace ActiproMVVMtest.Models
         public int CellType
         {
             get { return cellType; }
+        }
+
+        public static void ResetIds()
+        {
+            idCounter = 0;
         }
     }
 }

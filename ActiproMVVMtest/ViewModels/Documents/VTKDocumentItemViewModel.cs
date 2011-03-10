@@ -18,6 +18,7 @@ namespace ActiproMVVMtest.ViewModels
         private RenderWindowControl rwc;
         private WindowsFormsHost wfh;
         private VTKDataModel vtkData;
+        private vtkPolyDataMapper mapper;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -39,7 +40,7 @@ namespace ActiproMVVMtest.ViewModels
             wfh.Child = rwc;
             rwc.CreateGraphics();
             rwc.RenderWindow.SetCurrentCursor(9);
-            // rwc.RenderWindow.GetInteractor().LeftButtonPressEvt += new vtkObject.vtkObjectEventHandler(leftMouseDown);
+            rwc.RenderWindow.GetInteractor().LeftButtonPressEvt += new vtkObject.vtkObjectEventHandler(leftMouseDown);
 
             // set up basic viewing
             vtkRenderer ren = rwc.RenderWindow.GetRenderers().GetFirstRenderer();
@@ -67,7 +68,7 @@ namespace ActiproMVVMtest.ViewModels
             lut.SetRampToLinear();
             lut.Build();
 
-            vtkPolyDataMapper mapper = vtkPolyDataMapper.New();
+            mapper = vtkPolyDataMapper.New();
             mapper.SetInputConnection(glyp.GetOutputPort());
             mapper.SetLookupTable(lut);
             mapper.ScalarVisibilityOn();
@@ -92,6 +93,11 @@ namespace ActiproMVVMtest.ViewModels
         {
             rwc.Update();
             rwc.Invalidate();
+        }
+
+        public void ResetColorMapRange()
+        {
+            mapper.SetScalarRange(0, this.vtkData.NumPoints - 1);
         }
 
         /// <summary>

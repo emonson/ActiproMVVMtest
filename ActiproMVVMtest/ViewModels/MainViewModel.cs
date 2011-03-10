@@ -17,10 +17,11 @@ namespace ActiproMVVMtest.ViewModels {
         private DeferrableObservableCollection<DocumentItemViewModel> documentItems = new DeferrableObservableCollection<DocumentItemViewModel>();
         private DelegateCommand<object> newDocumentCommand;
         private DelegateCommand<object> startSimCommand;
+        private DelegateCommand<object> resetSimCommand;
 
         private SimulationModel simModel;
         private VTKDataModel vtkModel;
-        private SimConfigViewModel simConfigViewModel;
+        private SimConfigModel simConfigModel;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -31,31 +32,32 @@ namespace ActiproMVVMtest.ViewModels {
 		/// </summary>
 		public MainViewModel() {
 
-            SimConfigModel simConfigModel = new SimConfigModel();
+            simConfigModel = new SimConfigModel();
 
 			// Build tool items
 			this.toolItems = new DeferrableObservableCollection<ToolItemViewModel>();
 
 			// Tool 2
-            ToolItemViewModel viewModel = new Tool2ViewModel();
+            Tool2ViewModel viewModel = new Tool2ViewModel();
 			viewModel.DefaultDock = Dock.Bottom;
 			viewModel.DockGroup = "BottomGroup";
+            viewModel.TextOutput = "0";
 			this.toolItems.Add(viewModel);
 
             // Sim Config
-            simConfigViewModel = new SimConfigViewModel(simConfigModel);
+            SimConfigViewModel simConfigViewModel = new SimConfigViewModel(simConfigModel);
             simConfigViewModel.DefaultDock = Dock.Left;
             simConfigViewModel.DockGroup = "LeftGroup";
             this.toolItems.Add(simConfigViewModel);
 
             // Tool 3
-			viewModel = new Tool3ViewModel();
-			viewModel.DefaultDock = Dock.Left;
-            viewModel.DockGroup = "HiddenGroup";
-			viewModel.IsInitiallyAutoHidden = true;
-			this.toolItems.Add(viewModel);
+			Tool3ViewModel viewModel3 = new Tool3ViewModel();
+			viewModel3.DefaultDock = Dock.Left;
+            viewModel3.DockGroup = "HiddenGroup";
+			viewModel3.IsInitiallyAutoHidden = true;
+			this.toolItems.Add(viewModel3);
 
-            this.simModel = new SimulationModel(simConfigViewModel);
+            this.simModel = new SimulationModel(simConfigModel);
 
             // this.AddNewDocument("VTKDocument");
         }
@@ -113,25 +115,68 @@ namespace ActiproMVVMtest.ViewModels {
 
         public void StartSim(object parameter)
         {
-            for (int ii = 0; ii < this.simConfigViewModel.Duration; ++ii)
+            for (int ii = 0; ii < this.simConfigModel.Duration; ++ii)
             {
                 this.simModel.MoveAllCells();
-                this.vtkModel.Update();
-                if (ii % this.simConfigViewModel.VisInterval == 0)
+                foreach (ToolItemViewModel vm in this.toolItems)
                 {
-                    // I think this should be possible through command bindings
-                    // and delegate subscriptions...
-                    foreach (DocumentItemViewModel vm in this.documentItems)
+                    Tool2ViewModel tmp = vm as Tool2ViewModel;
+                    if (tmp != null)
                     {
-                        VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
-                        if (tmp != null)
+                        tmp.TextOutput = this.simModel.Time.ToString();
+                    }
+                }
+                if (this.vtkModel != null)
+                {
+                    this.vtkModel.Update();
+                    if (ii % this.simConfigModel.VisInterval == 0)
+                    {
+                        // I think this should be possible through command bindings
+                        // and delegate subscriptions...
+                        foreach (DocumentItemViewModel vm in this.documentItems)
                         {
-                            tmp.Update();
+                            VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
+                            if (tmp != null)
+                            {
+                                tmp.Update();
+                            }
                         }
                     }
                 }
             }
         }
+
+        public void ResetSim(object parameter)
+        {
+            this.simModel.ResetCells();
+            foreach (ToolItemViewModel vm in this.toolItems)
+            {
+                Tool2ViewModel tmp = vm as Tool2ViewModel;
+                if (tmp != null)
+                {
+                    tmp.TextOutput = this.simModel.Time.ToString();
+                }
+            }
+            if (this.vtkModel != null)
+            {
+                this.vtkModel.Update();
+                // I think this should be possible through command bindings
+                // and delegate subscriptions...
+                foreach (DocumentItemViewModel vm in this.documentItems)
+                {
+                    VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
+                    if (tmp != null)
+                    {
+                        tmp.ResetColorMapRange();
+                        tmp.Update();
+                    }
+                }
+            }
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        // COMMANDS
+        /////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /// <summary>
         /// Gets the add new document command.
@@ -161,6 +206,20 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
+        /// <summary>
+        /// Gets the reset sim command.
+        /// </summary>
+        /// <value>The add new document command.</value>
+        public ICommand ResetSimCommand
+        {
+            get
+            {
+                if (this.resetSimCommand == null)
+                    this.resetSimCommand = new DelegateCommand<object>(this.OnResetSimCommandExecuted);
+                return this.resetSimCommand;
+            }
+        }
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////
         // NON-PUBLIC PROCEDURES
         /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -181,6 +240,15 @@ namespace ActiproMVVMtest.ViewModels {
         private void OnStartSimCommandExecuted(object parameter)
         {
             this.StartSim(parameter);
+        }
+
+        /// <summary>
+        /// Occurs when the <see cref="ResetSimCommand"/> is executed.
+        /// </summary>
+        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
+        private void OnResetSimCommandExecuted(object parameter)
+        {
+            this.ResetSim(parameter);
         }
 
     }
