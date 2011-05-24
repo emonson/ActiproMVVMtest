@@ -92,7 +92,39 @@ namespace ActiproMVVMtest.Common
 			}
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Handles the <c>WindowActivated</c> event of the <c>DockSite</c> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DockingWindowEventArgs"/> instance containing the event data.</param>
+        private static void OnDockSiteWindowActivated(object sender, DockingWindowEventArgs e)
+        {
+            DockSite dockSite = sender as DockSite;
+            if (dockSite == null)
+                return;
+
+            // Ensure the DockingWindow exists and is generated for an item
+            DockingWindow dockingWindow = e.Window;
+            if (dockingWindow == null || !dockingWindow.IsContainerForItem)
+                return;
+
+            ToolWindowCollection toolWindows = dockSite.ToolWindows;
+            foreach (ToolWindow tw in toolWindows)
+            {
+                if (tw.Name == "toolWindow2")
+                {
+                    if (dockingWindow is DocumentWindow)
+                        tw.Title = dockingWindow.Title;
+                    else if (dockingWindow is ToolWindow)
+                        tw.Title = dockingWindow.Name;
+                    else
+                        tw.Title = "problem";
+                }
+            }
+
+        }
+
+        /// <summary>
 		/// Called when <see cref="IsManagedProperty"/> is changed.
 		/// </summary>
 		/// <param name="d">The dependency object that was changed.</param>
@@ -103,10 +135,16 @@ namespace ActiproMVVMtest.Common
 				return;
 
 			// Add handler for WindowRegistered event, which will allow us to open/position generated windows
-			if ((bool)e.NewValue)
-				dockSite.WindowRegistered += DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
-			else
-				dockSite.WindowRegistered -= DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
+            if ((bool)e.NewValue)
+            {
+                dockSite.WindowRegistered += DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
+                // dockSite.WindowActivated += DockSiteViewModelBehavior.OnDockSiteWindowActivated;
+            }
+            else
+            {
+                dockSite.WindowRegistered -= DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
+                // dockSite.WindowActivated -= DockSiteViewModelBehavior.OnDockSiteWindowActivated;
+            }
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////

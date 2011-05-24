@@ -58,11 +58,14 @@
 	    <docking:DockSite x:Name="MainDockSite"
                           ToolItemsSource="{Binding ToolItems}" ToolItemContainerStyle="{StaticResource ToolItemStyle}"
                           DocumentItemsSource="{Binding DocumentItems}" DocumentItemContainerStyle="{StaticResource DocumentItemStyle}"
-			              common:DockSiteViewModelBehavior.IsManaged="true">
-		    <docking:Workspace>
+			              common:DockSiteViewModelBehavior.IsManaged="true" 
+                          UseHostedAutoHidePopups="False"
+                          WindowActivated="MainDockSite_WindowActivated"
+                          >
+		    <docking:Workspace x:Name="MainWorkspace">
 			    <docking:TabbedMdiHost>
 				    <docking:TabbedMdiContainer>
-					    <docking:DocumentWindow Title="WelcomeDocument.rtf" Description="Rich-text document">
+					    <docking:DocumentWindow x:Name="InitialDocWindow" Title="WelcomeDocument.rtf" Description="Rich-text document">
 						    <RichTextBox BorderThickness="0" />
 					    </docking:DocumentWindow>
 				    </docking:TabbedMdiContainer>

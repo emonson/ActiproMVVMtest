@@ -59,6 +59,7 @@ namespace ActiproMVVMtest.ViewModels {
 
             this.simModel = new SimulationModel(simConfigModel);
 
+            
             // this.AddNewDocument("VTKDocument");
         }
 
@@ -89,9 +90,11 @@ namespace ActiproMVVMtest.ViewModels {
         }
 
         /// <summary>
-        /// Adds new TextDocument to documentItems
+        /// Adds new TextDocument to documentItems.
+        /// Only accessible internally or through command binding to NewDocumentCommand
         /// </summary>
-        public void AddNewDocument(object parameter)
+        /// <param name="parameter">Sets type of document ("TextDocument" or "VTKDocument").</param>
+        private void AddNewDocument(object parameter)
         {
             string doc_type = (string)parameter;
             if (doc_type != null)
@@ -113,7 +116,12 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
-        public void StartSim(object parameter)
+        /// <summary>
+        /// Starts a simulation run.
+        /// Only accessible internally or through command binding to StartSimCommand
+        /// </summary>
+        /// <param name="parameter">Not used right now.</param>
+        private void StartSim(object parameter)
         {
             for (int ii = 0; ii < this.simConfigModel.Duration; ++ii)
             {
@@ -146,7 +154,12 @@ namespace ActiproMVVMtest.ViewModels {
             }
         }
 
-        public void ResetSim(object parameter)
+        /// <summary>
+        /// Reset simulation to initial state.
+        /// Only accessible internally or through command binding to ResetSimCommand
+        /// </summary>
+        /// <param name="parameter">Not used right now.</param>
+        private void ResetSim(object parameter)
         {
             this.simModel.ResetCells();
             foreach (ToolItemViewModel vm in this.toolItems)
@@ -187,7 +200,7 @@ namespace ActiproMVVMtest.ViewModels {
             get
             {
                 if (this.newDocumentCommand == null)
-                    this.newDocumentCommand = new DelegateCommand<object>(this.OnNewDocumentCommandExecuted);
+                    this.newDocumentCommand = new DelegateCommand<object>(this.AddNewDocument);
                 return this.newDocumentCommand;
             }
         }
@@ -201,7 +214,7 @@ namespace ActiproMVVMtest.ViewModels {
             get
             {
                 if (this.startSimCommand == null)
-                    this.startSimCommand = new DelegateCommand<object>(this.OnStartSimCommandExecuted);
+                    this.startSimCommand = new DelegateCommand<object>(this.StartSim);
                 return this.startSimCommand;
             }
         }
@@ -215,41 +228,9 @@ namespace ActiproMVVMtest.ViewModels {
             get
             {
                 if (this.resetSimCommand == null)
-                    this.resetSimCommand = new DelegateCommand<object>(this.OnResetSimCommandExecuted);
+                    this.resetSimCommand = new DelegateCommand<object>(this.ResetSim);
                 return this.resetSimCommand;
             }
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-        // NON-PUBLIC PROCEDURES
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Occurs when the <see cref="NewDocumentCommand"/> is executed.
-        /// </summary>
-        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
-        private void OnNewDocumentCommandExecuted(object parameter)
-        {
-            this.AddNewDocument(parameter);
-        }
-
-        /// <summary>
-        /// Occurs when the <see cref="StartSimCommand"/> is executed.
-        /// </summary>
-        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
-        private void OnStartSimCommandExecuted(object parameter)
-        {
-            this.StartSim(parameter);
-        }
-
-        /// <summary>
-        /// Occurs when the <see cref="ResetSimCommand"/> is executed.
-        /// </summary>
-        /// <param name="parameter">The associated command parameter; otherwise, <see langword="null"/>.</param>
-        private void OnResetSimCommandExecuted(object parameter)
-        {
-            this.ResetSim(parameter);
-        }
-
     }
 }
