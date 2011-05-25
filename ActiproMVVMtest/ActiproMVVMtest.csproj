@@ -87,6 +87,12 @@
     <Compile Include="ViewModels\Tools\SimConfigViewModel.cs" />
     <Compile Include="ViewModels\Tools\Tool2ViewModel.cs" />
     <Compile Include="ViewModels\Tools\Tool3ViewModel.cs" />
+    <Compile Include="Views\Documents\TextDocumentDisplayOptionsView.xaml.cs">
+      <DependentUpon>TextDocumentDisplayOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Documents\VTKDocumentDisplayOptionsView.xaml.cs">
+      <DependentUpon>VTKDocumentDisplayOptionsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Documents\VTKDocumentItemView.xaml.cs">
       <DependentUpon>VTKDocumentItemView.xaml</DependentUpon>
     </Compile>
@@ -117,6 +123,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Documents\TextDocumentDisplayOptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Documents\VTKDocumentDisplayOptionsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Documents\VTKDocumentItemView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

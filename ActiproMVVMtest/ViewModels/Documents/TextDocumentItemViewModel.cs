@@ -23,8 +23,6 @@ namespace ActiproMVVMtest.ViewModels
 			this.Title = string.Format("Document {0}", counter++);
 			this.Text = string.Format("Dynamically created at {0}", DateTime.Now);
 			this.Description = "Text document";
-            this.DisplayList.Add("font size");
-            this.DisplayList.Add("font color");
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////

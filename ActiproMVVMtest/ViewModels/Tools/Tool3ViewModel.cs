@@ -11,8 +11,8 @@ namespace ActiproMVVMtest.ViewModels
 	/// </summary>
 	public class Tool3ViewModel : ToolItemViewModel {
 
-        private DeferrableObservableCollection<string> _remoteOptions;
-        public DeferrableObservableCollection<string> RemoteDocDisplayOptions 
+        private DocumentItemViewModel _remoteOptions;
+        public DocumentItemViewModel RemoteDocDisplayOptions 
         {
             get { return _remoteOptions; }
             set
@@ -28,7 +28,7 @@ namespace ActiproMVVMtest.ViewModels
                 }
             }
         }
-        public DeferrableObservableCollection<string> DefaultOptions { get; set; }
+        public DocumentItemViewModel DefaultOptions = new DocumentItemViewModel();
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -41,8 +41,7 @@ namespace ActiproMVVMtest.ViewModels
 			this.ImageSource = new BitmapImage(new Uri("/Resources/Images/Toolbox16.png", UriKind.Relative));
 			this.Name = "toolWindow3";
 			this.Title = "Tool 3";
-            DefaultOptions = new DeferrableObservableCollection<string>();
-            DefaultOptions.Add("no options");
+            DefaultOptions.Title = "default options title";
             RemoteDocDisplayOptions = DefaultOptions;
 		}
 	}

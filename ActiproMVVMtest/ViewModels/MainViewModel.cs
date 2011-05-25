@@ -273,7 +273,7 @@ namespace ActiproMVVMtest.ViewModels {
                         DocumentItemViewModel doc_model = dockingWindow.DataContext as DocumentItemViewModel;
                         if (doc_model != null)
                         {
-                            vm.RemoteDocDisplayOptions = doc_model.DisplayList;
+                            vm.RemoteDocDisplayOptions = doc_model;
                         }
                     }
                     else

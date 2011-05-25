@@ -11,7 +11,6 @@ namespace ActiproMVVMtest.Common.ViewModels
 
 		private bool isReadOnly;
 		private string fileName;
-        public DeferrableObservableCollection<string> DisplayList = new DeferrableObservableCollection<string>();
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES
