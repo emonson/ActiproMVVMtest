@@ -2,6 +2,7 @@
 using System.Windows;
 using ActiproSoftware.Windows.Controls.Docking;
 using ActiproMVVMtest.Common.ViewModels;
+using ActiproMVVMtest.ViewModels;
 
 namespace ActiproMVVMtest.Common
 {
@@ -138,12 +139,13 @@ namespace ActiproMVVMtest.Common
             if ((bool)e.NewValue)
             {
                 dockSite.WindowRegistered += DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
-                // dockSite.WindowActivated += DockSiteViewModelBehavior.OnDockSiteWindowActivated;
+                // Event monitoring for Doc Display Options tool
+                dockSite.WindowActivated += MainViewModel.OnDockSiteWindowActivated;
             }
             else
             {
                 dockSite.WindowRegistered -= DockSiteViewModelBehavior.OnDockSiteWindowRegistered;
-                // dockSite.WindowActivated -= DockSiteViewModelBehavior.OnDockSiteWindowActivated;
+                dockSite.WindowActivated -= MainViewModel.OnDockSiteWindowActivated;
             }
 		}
 

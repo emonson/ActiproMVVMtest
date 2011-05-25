@@ -5,6 +5,7 @@ using ActiproSoftware.Windows;
 using ActiproMVVMtest.Common;
 using ActiproMVVMtest.Models;
 using ActiproMVVMtest.Common.ViewModels;
+using ActiproSoftware.Windows.Controls.Docking;
 
 namespace ActiproMVVMtest.ViewModels {
 
@@ -37,7 +38,16 @@ namespace ActiproMVVMtest.ViewModels {
 			// Build tool items
 			this.toolItems = new DeferrableObservableCollection<ToolItemViewModel>();
 
-			// Tool 2
+            // Tool 3
+            Tool3ViewModel viewModel3 = new Tool3ViewModel();
+            viewModel3.Name = "DisplayOptions";
+            viewModel3.Title = "Doc Display Options";
+            viewModel3.DefaultDock = Dock.Right;
+            viewModel3.DockGroup = "RightGroup";
+            viewModel3.IsInitiallyAutoHidden = false;
+            this.toolItems.Add(viewModel3);
+
+            // Tool 2
             Tool2ViewModel viewModel = new Tool2ViewModel();
 			viewModel.DefaultDock = Dock.Bottom;
 			viewModel.DockGroup = "BottomGroup";
@@ -51,14 +61,15 @@ namespace ActiproMVVMtest.ViewModels {
             this.toolItems.Add(simConfigViewModel);
 
             // Tool 3
-			Tool3ViewModel viewModel3 = new Tool3ViewModel();
-			viewModel3.DefaultDock = Dock.Left;
-            viewModel3.DockGroup = "HiddenGroup";
-			viewModel3.IsInitiallyAutoHidden = true;
-			this.toolItems.Add(viewModel3);
+            //Tool3ViewModel viewModel3 = new Tool3ViewModel();
+            //viewModel3.DefaultDock = Dock.Left;
+            //viewModel3.DockGroup = "HiddenGroup";
+            //viewModel3.IsInitiallyAutoHidden = true;
+            //this.toolItems.Add(viewModel3);
 
             this.simModel = new SimulationModel(simConfigModel);
 
+            this.AddNewDocument("TextDocument");
             
             // this.AddNewDocument("VTKDocument");
         }
@@ -232,5 +243,50 @@ namespace ActiproMVVMtest.ViewModels {
                 return this.resetSimCommand;
             }
         }
+
+        /// <summary>
+        /// Handles the <c>WindowActivated</c> event of the <c>DockSite</c> control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="DockingWindowEventArgs"/> instance containing the event data.</param>
+        public static void OnDockSiteWindowActivated(object sender, DockingWindowEventArgs e)
+        {
+            DockSite dockSite = sender as DockSite;
+            if (dockSite == null)
+                return;
+
+            // Ensure the DockingWindow exists and is generated for an item
+            DockingWindow dockingWindow = e.Window;
+            if (dockingWindow == null || !dockingWindow.IsContainerForItem)
+                return;
+
+            // TODO: Later should have specific single case of display options tool window
+            // which is either visible or not rather than looping and checking...
+            ToolWindowCollection toolWindows = dockSite.ToolWindows;
+            foreach (ToolWindow tw in toolWindows)
+            {
+                Tool3ViewModel vm = tw.DataContext as Tool3ViewModel;
+                if (tw != null && vm != null)
+                {
+                    if (dockingWindow is DocumentWindow)
+                    {
+                        DocumentItemViewModel doc_model = dockingWindow.DataContext as DocumentItemViewModel;
+                        if (doc_model != null)
+                        {
+                            vm.RemoteDocDisplayOptions = doc_model.DisplayList;
+                        }
+                    }
+                    else
+                    {
+                        if (tw != dockingWindow)
+                        {
+                            vm.RemoteDocDisplayOptions = vm.DefaultOptions;
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }

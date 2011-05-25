@@ -1,4 +1,5 @@
 ﻿using System.Windows.Media;
+using ActiproSoftware.Windows;
 
 namespace ActiproMVVMtest.Common.ViewModels
 {
@@ -10,6 +11,7 @@ namespace ActiproMVVMtest.Common.ViewModels
 
 		private bool isReadOnly;
 		private string fileName;
+        public DeferrableObservableCollection<string> DisplayList = new DeferrableObservableCollection<string>();
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES

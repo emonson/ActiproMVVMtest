@@ -60,7 +60,6 @@
                           DocumentItemsSource="{Binding DocumentItems}" DocumentItemContainerStyle="{StaticResource DocumentItemStyle}"
 			              common:DockSiteViewModelBehavior.IsManaged="true" 
                           UseHostedAutoHidePopups="False"
-                          WindowActivated="MainDockSite_WindowActivated"
                           >
 		    <docking:Workspace x:Name="MainWorkspace">
 			    <docking:TabbedMdiHost>

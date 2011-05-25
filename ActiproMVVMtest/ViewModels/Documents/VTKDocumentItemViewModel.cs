@@ -32,6 +32,8 @@ namespace ActiproMVVMtest.ViewModels
 			this.Title = string.Format("VTK Doc {0}", counter++);
 			this.Text = string.Format("Dynamically created at {0}", DateTime.Now);
 			this.Description = "VTK document";
+            this.DisplayList.Add("cells");
+            this.DisplayList.Add("tracks");
             this.vtkData = dataModel;
 
             // create a VTK output control and make the forms host point to it

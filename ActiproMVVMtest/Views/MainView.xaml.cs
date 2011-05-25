@@ -30,11 +30,12 @@ namespace ActiproMVVMtest.Views {
             MessageBox.Show("Close the application here.");
         }
 
-        private void MainDockSite_WindowActivated(object sender, ActiproSoftware.Windows.Controls.Docking.DockingWindowEventArgs e)
-        {
-            var vm = this.DataContext as ActiproMVVMtest.ViewModels.MainViewModel;
-            vm.ResetSimCommand.Execute(null);
-        }
+        // Example of rerouting MainView event as a MainViewModel command
+        //private void MainDockSite_WindowActivated(object sender, ActiproSoftware.Windows.Controls.Docking.DockingWindowEventArgs e)
+        //{
+        //    var vm = this.DataContext as ActiproMVVMtest.ViewModels.MainViewModel;
+        //    vm.ResetSimCommand.Execute(null);
+        //}
 
     }
 }
