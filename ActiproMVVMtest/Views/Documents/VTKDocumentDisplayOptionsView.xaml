@@ -3,9 +3,87 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:editors="http://schemas.actiprosoftware.com/winfx/xaml/editors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	         xmlns:vm="clr-namespace:ActiproMVVMtest.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <TextBox BorderThickness="0" Text="{Binding Text}" IsReadOnly="{Binding IsReadOnly}" TextWrapping="Wrap"
-                 Background="BlanchedAlmond">
-    </TextBox>
+             >
+    <UserControl.Resources>
+        <ObjectDataProvider x:Key="colorSpaceModelEnum"
+                            MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="vm:ColorSpaceModel" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="75 " />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock Text="color by" Margin="6,0"
+                       Grid.Column="0" Grid.Row="0"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               />
+        <ComboBox Name="cell_type_cbox"
+                       Grid.Column="1" Grid.Row="0"
+                                MinWidth="100"
+                                ItemsSource="{Binding Path=CellAttributeArrayNames}" 
+                                SelectedValue="{Binding Path=CellColorArrayName}"
+                                Margin="0,2"
+                                />
+        <TextBlock Text="max color" Margin="6,0"
+                       Grid.Column="0" Grid.Row="1"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               />
+        <editors:ColorEditBox x:Name="ctf_max_color_edit_box"
+                       Grid.Column="1" Grid.Row="1"
+                                      CheckBoxVisibility="Collapsed"
+						              SpinnerVisibility="Collapsed"
+						              Width="60"
+                                      HorizontalAlignment="Left" 
+                                  IsAlphaComponentVisible="False"
+                                      Format=""
+                                      Value="{Binding Path=CTF_max_color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="0,2"
+                                      />
+        <TextBlock Text="min color" Margin="6,0"
+                       Grid.Column="0" Grid.Row="2"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               />
+        <editors:ColorEditBox x:Name="ctf_min_color_edit_box"
+                       Grid.Column="1" Grid.Row="2"
+                                      CheckBoxVisibility="Collapsed"
+						              SpinnerVisibility="Collapsed"
+						              Width="60"
+                                      HorizontalAlignment="Left" 
+                                  IsAlphaComponentVisible="False"
+                                      Format=""
+                                      Value="{Binding Path=CTF_min_color, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Margin="0,2"
+                                      />
+        <TextBlock Text="color space" Margin="6,0"
+                       Grid.Column="0" Grid.Row="3"
+                               HorizontalAlignment="Right" VerticalAlignment="Center"
+                               />
+        <ComboBox x:Name="color_space_cb"
+                       Grid.Column="1" Grid.Row="3"
+                       ItemsSource="{Binding Source={StaticResource colorSpaceModelEnum}}"
+                    SelectedValue="{Binding Path=CellColorMapSpaceModel}"
+                    IsSynchronizedWithCurrentItem="true" 
+                      Width="80"
+                      HorizontalAlignment="Left"
+                    Margin="0,2"
+                    />
+    </Grid>
 </UserControl>

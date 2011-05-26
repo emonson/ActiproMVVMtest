@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Windows;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Forms.Integration;
 using ActiproMVVMtest.Models;
 using ActiproMVVMtest.Common.ViewModels;
@@ -7,6 +9,8 @@ using Kitware.VTK;
 
 namespace ActiproMVVMtest.ViewModels
 {
+    public enum ColorSpaceModel { RGB, HSV, Lab, Diverging }
+    public enum ColorSpaceRamp { Linear, Log10 }
 
 	/// <summary>
 	/// Represents a text view-model for the sample.
@@ -17,8 +21,15 @@ namespace ActiproMVVMtest.ViewModels
 		private string text;
         private RenderWindowControl rwc;
         private WindowsFormsHost wfh;
-        private VTKDataModel vtkData;
+        private VTKDataModel vtkData;    // public for xaml access...
         private vtkPolyDataMapper mapper;
+        private vtkColorTransferFunction ctf;
+        private System.Windows.Media.Color ctf_min_color = new System.Windows.Media.Color();
+        private System.Windows.Media.Color ctf_max_color = new System.Windows.Media.Color();
+
+        public ObservableCollection<string> CellAttributeArrayNames { get; set; }
+        private string cellColorArrayName;
+        private ColorSpaceModel cellColorMapSpaceModel;
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// OBJECT
@@ -33,6 +44,12 @@ namespace ActiproMVVMtest.ViewModels
 			this.Text = string.Format("Dynamically created at {0}", DateTime.Now);
 			this.Description = "VTK document";
             this.vtkData = dataModel;
+
+            this.CellAttributeArrayNames = new ObservableCollection<string>();
+            this.CellAttributeArrayNames.Add(this.vtkData.CellIdsArrayName);
+            this.CellAttributeArrayNames.Add(this.vtkData.CellTypeArrayName);
+            this.cellColorArrayName = this.CellAttributeArrayNames[0];
+            this.cellColorMapSpaceModel = ColorSpaceModel.HSV;
 
             // create a VTK output control and make the forms host point to it
             rwc = new RenderWindowControl();
@@ -49,7 +66,6 @@ namespace ActiproMVVMtest.ViewModels
             // background color
             ren.SetBackground(0.1, 0.1, 0.1);
 
-
             vtkSphereSource sph = vtkSphereSource.New();
             sph.SetThetaResolution(16);
             sph.SetPhiResolution(16);
@@ -61,21 +77,27 @@ namespace ActiproMVVMtest.ViewModels
             glyp.ScalingOff();
             glyp.OrientOff();
 
-            vtkLookupTable lut = vtkLookupTable.New();
-            lut.SetValueRange(0.5, 1.0);
-            lut.SetSaturationRange(0.1, 1.0);
-            lut.SetHueRange(0.4, 0.6);
-            lut.SetRampToLinear();
-            lut.Build();
+
+            ctf = vtkColorTransferFunction.New();
+            ctf_min_color = System.Windows.Media.Color.FromRgb(0, 128, 255);
+            ctf_max_color = System.Windows.Media.Color.FromRgb(64, 255, 64);
+            this.BuildCTF();
+
+            //lut.SetValueRange(0.5, 1.0);
+            //lut.SetSaturationRange(0.1, 1.0);
+            //lut.SetHueRange(0.4, 0.6);
+            //lut.SetAlphaRange(0.2, 1.0);
+            //lut.SetRampToLinear();
+            //lut.Build();
 
             mapper = vtkPolyDataMapper.New();
             mapper.SetInputConnection(glyp.GetOutputPort());
-            mapper.SetLookupTable(lut);
+            mapper.SetLookupTable(ctf);
             mapper.ScalarVisibilityOn();
             mapper.SetScalarModeToUsePointFieldData();
-            // uncomment the next line to avoid the out of memory problem
-            mapper.SelectColorArray(this.vtkData.CellIdsArrayName);
-            mapper.SetScalarRange(0, this.vtkData.NumPoints - 1);
+            mapper.SelectColorArray(this.cellColorArrayName);
+            // scalar range doens't affect anything when using a ctf (instead of a lut)
+            // mapper.SetScalarRange(0, this.vtkData.NumPoints - 1);
 
             vtkActor actor = vtkActor.New();
             actor.SetMapper(mapper);
@@ -85,6 +107,78 @@ namespace ActiproMVVMtest.ViewModels
             ren.ResetCamera();
 		}
 
+        //
+        // Public accessors
+        //
+        public System.Windows.Media.Color CTF_max_color
+        {
+            get { return ctf_max_color; }
+            set
+            {
+                if (value == ctf_max_color)
+                    return;
+                else
+                {
+                    ctf_max_color = value;
+                    this.BuildCTF();
+                    this.Update();
+                    this.NotifyPropertyChanged("CTF_max_color");
+                }
+            }
+        }
+
+        public System.Windows.Media.Color CTF_min_color
+        {
+            get { return ctf_min_color; }
+            set
+            {
+                if (value == ctf_min_color)
+                    return;
+                else
+                {
+                    ctf_min_color = value;
+                    this.BuildCTF();
+                    this.Update();
+                    this.NotifyPropertyChanged("CTF_min_color");
+                }
+            }
+        }
+
+        public string CellColorArrayName
+        {
+            get { return this.cellColorArrayName; }
+            set
+            {
+                if (value == this.cellColorArrayName)
+                    return;
+                else
+                {
+                    this.cellColorArrayName = value;
+                    this.BuildCTF();
+                    this.mapper.SelectColorArray(this.cellColorArrayName);
+                    this.Update();
+                    this.NotifyPropertyChanged("CellColorArrayName");
+                }
+            }
+        }
+
+        public ColorSpaceModel CellColorMapSpaceModel
+        {
+            get { return this.cellColorMapSpaceModel; }
+            set
+            {
+                if (value == this.cellColorMapSpaceModel)
+                    return;
+                else
+                {
+                    this.cellColorMapSpaceModel = value;
+                    this.BuildCTF();
+                    this.Update();
+                    this.NotifyPropertyChanged("CellColorMapSpaceModel");
+                }
+            }
+        }
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,6 +187,19 @@ namespace ActiproMVVMtest.ViewModels
         {
             rwc.Update();
             rwc.Invalidate();
+        }
+
+        public void BuildCTF()
+        {
+            double[] range = new double[2];
+            range = this.vtkData.Output.GetPointData().GetArray(this.cellColorArrayName).GetRange();
+
+            ctf.SetColorSpace((int)this.cellColorMapSpaceModel);
+            ctf.RemoveAllPoints();
+            ctf.AddRGBPoint(range[0], ctf_min_color.ScR, ctf_min_color.ScG, ctf_min_color.ScB);
+            ctf.AddRGBPoint(range[1], ctf_max_color.ScR, ctf_max_color.ScG, ctf_max_color.ScB);
+            ctf.SetScale((int)ColorSpaceRamp.Linear);
+            ctf.Build();
         }
 
         public void ResetColorMapRange()

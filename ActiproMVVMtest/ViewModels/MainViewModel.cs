@@ -71,7 +71,7 @@ namespace ActiproMVVMtest.ViewModels {
 
             this.AddNewDocument("TextDocument");
             
-            // this.AddNewDocument("VTKDocument");
+            this.AddNewDocument("VTKDocument");
         }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
