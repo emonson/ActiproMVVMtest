@@ -19,7 +19,9 @@ namespace ActiproMVVMtest.ViewModels
 
 		private static int counter = 1;
 		private string text;
+        private long selectedCell = -1;
         private RenderWindowControl rwc;
+        private vtkRenderer ren;
         private WindowsFormsHost wfh;
         private VTKDataModel vtkData;    // public for xaml access...
         private vtkPolyDataMapper mapper;
@@ -57,10 +59,16 @@ namespace ActiproMVVMtest.ViewModels
             wfh.Child = rwc;
             rwc.CreateGraphics();
             rwc.RenderWindow.SetCurrentCursor(9);
+
+            vtkInteractorStyleSwitch istyle = vtkInteractorStyleSwitch.New();
+            rwc.RenderWindow.GetInteractor().SetInteractorStyle(istyle);
+            rwc.RenderWindow.GetInteractor().SetPicker(vtkCellPicker.New());
+            (istyle).SetCurrentStyleToTrackballCamera();
+
             rwc.RenderWindow.GetInteractor().LeftButtonPressEvt += new vtkObject.vtkObjectEventHandler(leftMouseDown);
 
             // set up basic viewing
-            vtkRenderer ren = rwc.RenderWindow.GetRenderers().GetFirstRenderer();
+            ren = rwc.RenderWindow.GetRenderers().GetFirstRenderer();
             vtkCamera camera = ren.GetActiveCamera();
 
             // background color
@@ -179,6 +187,21 @@ namespace ActiproMVVMtest.ViewModels
             }
         }
 
+        public long SelectedCell
+        {
+            get { return this.selectedCell; }
+            set
+            {
+                if (value == this.selectedCell)
+                    return;
+                else
+                {
+                    this.selectedCell = value;
+                    this.NotifyPropertyChanged("SelectedCell");
+                }
+            }
+        }
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
 		// PUBLIC PROCEDURES
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +243,19 @@ namespace ActiproMVVMtest.ViewModels
         /// <param name="e"></param>
         public void leftMouseDown(vtkObject sender, vtkObjectEventArgs e)
         {
-            rwc.RenderWindow.GetRenderers().GetFirstRenderer().ResetCamera();
+            vtkRenderWindowInteractor interactor = this.rwc.RenderWindow.GetInteractor();
+            int[] x = interactor.GetEventPosition();
+            long p = ((vtkCellPicker)rwc.RenderWindow.GetInteractor().GetPicker()).Pick(x[0], x[1], 0, ren);
+
+            if (p > 0)
+            {
+                long pointID = ((vtkCellPicker)rwc.RenderWindow.GetInteractor().GetPicker()).GetPointId();
+                if (p >= 0)
+                {
+                    long cellID = (int)this.mapper.GetInput().GetPointData().GetArray(this.vtkData.CellIdsArrayName).GetTuple1(pointID);
+                    this.SelectedCell = cellID;
+                }
+            }
         }
 
         /// <summary>

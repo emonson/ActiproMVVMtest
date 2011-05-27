@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using ActiproSoftware.Windows;
@@ -68,10 +70,10 @@ namespace ActiproMVVMtest.ViewModels {
             //this.toolItems.Add(viewModel3);
 
             this.simModel = new SimulationModel(simConfigModel);
-
-            this.AddNewDocument("TextDocument");
             
             this.AddNewDocument("VTKDocument");
+
+            this.AddNewDocument("TextDocument");
         }
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +124,12 @@ namespace ActiproMVVMtest.ViewModels {
                     {
                         this.vtkModel = new VTKDataModel(this.simModel);
                     }
-                    this.documentItems.Add(new VTKDocumentItemViewModel(this.vtkModel));
+                    VTKDocumentItemViewModel vtk_mod = new VTKDocumentItemViewModel(this.vtkModel);
+                    // TODO: This should be done through messaging, not property changed events...
+                    // TODO: This type of thing probably leaks memory on VTK doc window closure...
+                    vtk_mod.PropertyChanged += this.VTKModelPropertyChanged;
+                    this.documentItems.Add(vtk_mod);
+                    // MessageBoxResult tmp = MessageBox.Show("Added a VTK view.");
                 }
             }
         }
@@ -137,12 +144,13 @@ namespace ActiproMVVMtest.ViewModels {
             for (int ii = 0; ii < this.simConfigModel.Duration; ++ii)
             {
                 this.simModel.MoveAllCells();
+                // TODO: Should only have one instance of this output window rather than loop...
                 foreach (ToolItemViewModel vm in this.toolItems)
                 {
                     Tool2ViewModel tmp = vm as Tool2ViewModel;
                     if (tmp != null)
                     {
-                        tmp.TextOutput = this.simModel.Time.ToString();
+                        tmp.TextOutput = "Sim Time: " + this.simModel.Time.ToString();
                     }
                 }
                 if (this.vtkModel != null)
@@ -151,7 +159,7 @@ namespace ActiproMVVMtest.ViewModels {
                     if (ii % this.simConfigModel.VisInterval == 0)
                     {
                         // I think this should be possible through command bindings
-                        // and delegate subscriptions...
+                        // and delegate subscriptions... or mediator pattern...
                         foreach (DocumentItemViewModel vm in this.documentItems)
                         {
                             VTKDocumentItemViewModel tmp = vm as VTKDocumentItemViewModel;
@@ -173,12 +181,13 @@ namespace ActiproMVVMtest.ViewModels {
         private void ResetSim(object parameter)
         {
             this.simModel.ResetCells();
+            // TODO: Should only have one instance of this output window rather than loop...
             foreach (ToolItemViewModel vm in this.toolItems)
             {
                 Tool2ViewModel tmp = vm as Tool2ViewModel;
                 if (tmp != null)
                 {
-                    tmp.TextOutput = this.simModel.Time.ToString();
+                    tmp.TextOutput = "Sim Time: " + this.simModel.Time.ToString();
                 }
             }
             if (this.vtkModel != null)
@@ -196,6 +205,28 @@ namespace ActiproMVVMtest.ViewModels {
                     }
                 }
             }
+        }
+
+        private void VTKModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            VTKDocumentItemViewModel vtk_mod = sender as VTKDocumentItemViewModel;
+
+            if (vtk_mod != null)
+            {
+                if (e.PropertyName == "SelectedCell")
+                {
+                    // TODO: Should only have one instance of this output window rather than loop...
+                    foreach (ToolItemViewModel vm in this.toolItems)
+                    {
+                        Tool2ViewModel tmp = vm as Tool2ViewModel;
+                        if (tmp != null)
+                        {
+                            tmp.TextOutput = "Selected Cell: " + vtk_mod.SelectedCell.ToString();
+                        }
+                    }
+                }
+            }
+            return;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////

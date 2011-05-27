@@ -64,9 +64,9 @@
 		    <docking:Workspace x:Name="MainWorkspace">
 			    <docking:TabbedMdiHost>
 				    <docking:TabbedMdiContainer>
-					    <docking:DocumentWindow x:Name="InitialDocWindow" Title="WelcomeDocument.rtf" Description="Rich-text document">
+					    <!--<docking:DocumentWindow x:Name="InitialDocWindow" Title="WelcomeDocument.rtf" Description="Rich-text document">
 						    <RichTextBox BorderThickness="0" />
-					    </docking:DocumentWindow>
+					    </docking:DocumentWindow>-->
 				    </docking:TabbedMdiContainer>
 			    </docking:TabbedMdiHost>
 		    </docking:Workspace>
